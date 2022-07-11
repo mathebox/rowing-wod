@@ -3,4 +3,233 @@ layout: default
 title: "Rowing WOD"
 ---
 
+<div class="flex flex-col h-screen justify-between bg-slate-50 dark:bg-slate-800">
+    <header class="py-3 max-w-xl mx-auto text-center">
+        <div class="tracking-widest uppercase text-slate-400 text-md font-light">Rowing workout of the day</div>
+        <a id="current-date" class="text-sm font-light leading-4 tracking-wider text-slate-400">&#8205;</a>
+        <a id="show-todays-wod-link" href="/" class="text-sm font-light leading-4 text-sky-600 dark:text-sky-700">Show today's WOD &rsaquo;</a>
+    </header>
+    <main class="max-w-xl mx-auto mb-auto">
+        <div class="pt-12 pb-8 tracking-wide flex flex-col">
+            <div class="inline-flex flex-col mx-auto">
+                <span id="wod-rounds" class="self-center md:self-start text-xl md:text-2xl font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">&#8205;</span>
+                <span id="wod-distance" class="self-center text-7xl md:text-9xl font-extrabold text-slate-800 dark:text-slate-200">&#8205;</span>
+                <span id="wod-rest" class="self-center md:self-end text-md md:text-xl text-slate-500 dark:text-slate-400">&#8205;</span>
+                <span id="wod-renew" class="self-center cursor-pointer">
+                    <svg data-prefix="fas" data-icon="Refresh Circle" class="m-2 w-6 h-6 md:w-8 md:h-8 text-slate-300" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+                        <path d="M256 48C141.31 48 48 141.32 48 256c0 114.86 93.14 208 208 208 114.69 0 208-93.31 208-208 0-114.87-93.13-208-208-208zm0 313a94 94 0 010-188h4.21l-14.11-14.1a14 14 0 0119.8-19.8l40 40a14 14 0 010 19.8l-40 40a14 14 0 01-19.8-19.8l18-18c-2.38-.1-5.1-.1-8.1-.1a66 66 0 1066 66 14 14 0 0128 0 94.11 94.11 0 01-94 94z"/>
+                    </svg>
+                </span>
+            </div>
+        </div>
+        <div class="p-6 flex flex-col bg-white dark:bg-slate-700 rounded-none md:rounded-lg shadow-sm md:shadow-md">
+            <div class="flex flex-row">
+                <div class="text-lg font-md text-slate-500 dark:text-slate-300">Customizations</div>
+            </div>
+            <div class="flex flex-col md:flex-row md:space-x-8">
+                <div class="flex flex-col basis-1/2">
+                    <div>
+                        <label for="min-rounds" class="leading-7 text-xs font-bold uppercase text-slate-600 dark:text-slate-400">Min. number of rounds</label>
+                        <input type="number" id="min-rounds" name="min-rounds" class="w-full bg-white dark:bg-slate-700 rounded border border-slate-300 dark:border-slate-900 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 text-base outline-none text-slate-700 dark:text-slate-300 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                    </div>
+                    <div>
+                        <label for="max-rounds" class="leading-7 text-xs font-bold uppercase text-slate-600 dark:text-slate-400">Max. number of rounds</label>
+                        <input type="number" id="max-rounds" name="max-rounds" class="w-full bg-white dark:bg-slate-700 rounded border border-slate-300 dark:border-slate-900 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 text-base outline-none text-slate-700 dark:text-slate-300 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                    </div>
+                </div>
+                <div class="flex flex-col basis-1/2">
+                    <div>
+                        <label for="min-distance" class="leading-7 text-xs font-bold uppercase text-slate-600 dark:text-slate-400">Min. distance (in meter)</label>
+                        <input type="number" id="min-distance" name="min-distance" class="w-full bg-white dark:bg-slate-700 rounded border border-slate-300 dark:border-slate-900 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 text-base outline-none text-slate-700 dark:text-slate-300 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                    </div>
+                    <div>
+                        <label for="max-distance" class="leading-7 text-xs font-bold uppercase text-slate-600 dark:text-slate-400">Max. distance (in meter)</label>
+                        <input type="number" id="max-distance" name="max-distance" class="w-full bg-white dark:bg-slate-700 rounded border border-slate-300 dark:border-slate-900 focus:border-sky-500 focus:ring-2 focus:ring-sky-200 text-base outline-none text-slate-700 dark:text-slate-300 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="pt-4 pb-2 text-xs text-slate-300 dark:text-slate-600 max-w-xl mx-auto">
+        Made by mathebox
+    </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js" integrity="sha512-+Ru50BzEpZjlFzVnjSmJfYFPFfY2hS0Kjlu/IvqaJoux7maF5lJrRVUJWJ2LevPls7rd242GLbWEt+zAo4OVVQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        let inputIDs = ["min-rounds", "max-rounds", "min-distance", "max-distance"];
+        let randomMode = false;
+
+        function updateURL() {
+            var searchParams = new URLSearchParams();
+            inputIDs.forEach(function(inputID) {
+                let value = document.getElementById(inputID).value;
+                if (value != "") {
+                    searchParams.set(inputID, value);
+                }
+            });
+            var newRelativePathQuery = window.location.pathname + '?' + searchParams.toString();
+            history.pushState(null, '', newRelativePathQuery);
+        }
+
+        function updateWorkout() {
+            let result = {};
+            var limits = {}; 
+            inputIDs.forEach(function(inputID) {
+                let value = document.getElementById(inputID).value;
+                if (value != "") {
+                    limits[inputID] = value
+                }
+            });
+
+            let limitsSet = Object.values(limits).length > 0;
+            let showTodaysWOD = !limitsSet && !randomMode;
+
+            let seed = showTodaysWOD ? new Date().toISOString().slice(0,10) : new Date().toISOString();
+            Math.seedrandom(seed);
+  
+            document.getElementById('current-date').innerText = new Date().toLocaleDateString();
+            document.getElementById('current-date').hidden = !showTodaysWOD;
+            document.getElementById('show-todays-wod-link').hidden = showTodaysWOD;
+
+            result['rounds'] = numberOfRounds(limits, result);
+            result['distance'] = distancePerRound(limits, result);
+            result['rest'] = restTime(limits, result);
+
+            updateWorkoutView(result['rounds'], result['distance'], result['rest']);
+
+        }
+
+        function weightedRandom(values) {
+            var sum = 0;
+            for (let j in values) {
+                sum += values[j];
+            }
+
+            var pick = Math.random() * sum;
+
+            for (let j in values) {
+                pick -= values[j];
+                if (pick <= 0) {
+                    return j;
+                }
+            }
+
+            return 1
+        }
+
+        function numberOfRounds(limits, selectedValues) {
+            let weights = {
+                1: 0.1,
+                2: 0.2,
+                3: 0.3,
+                4: 0.3,
+                5: 0.2,
+                6: 0.1,
+                8: 0.1,
+            };
+
+            // apply limits
+            for (let value in weights) {
+                if (value < limits['min-rounds'] || value > limits['max-rounds']) {
+                    delete weights[value];
+                }
+            }
+
+            return weightedRandom(weights);
+        }
+
+        function distancePerRound(limits, selectedValues) {
+            let weights = {
+                500: 0.1,
+                750: 0.2,
+                1000: 0.2,
+                1500: 0.2,
+                2000: 0.1,
+            };
+
+            // Apply limits
+            var multiplier = 1;
+            let numberOfRounds = parseInt(selectedValues['rounds']);
+            if (!isNaN(numberOfRounds)) {
+                if (numberOfRounds == 1) {
+                    // Double the distance if there is only one round.
+                    multiplier = 2;
+                }
+
+                // Remove distances that would not safisfy the minimum or maximum constraint.
+                let minimumDistance = parseInt(limits['min-distance']) || 0;
+                let maximumDistance = parseInt(limits['max-distance']) || Infinity;
+
+                let minimumDistancePerRound = Math.ceil(minimumDistance / multiplier / numberOfRounds);
+                let maximumDistancePerRound = Math.floor(maximumDistance / multiplier / numberOfRounds);
+
+                for (let value in weights) {
+                    if (value < minimumDistancePerRound || value > maximumDistancePerRound) {
+                        delete weights[value];
+                    }
+                }
+            }
+
+            return weightedRandom(weights) * multiplier;
+        }
+
+        function restTime(limits, selectedValues) {
+            let weights = {
+                30: 0.2,
+                60: 0.3,
+                90: 0.3,
+                120: 0.2,
+                180: 0.1,
+            };
+
+            // Improve weights based on selected values
+            let numberOfRounds = parseInt(selectedValues['rounds']);
+            let distancePerRound = parseInt(selectedValues['distance']);
+            if (!isNaN(numberOfRounds) && !isNaN(distancePerRound)) {
+                // Increase the weight depending on the total distance of the workout.
+                // With a longer distance, alonger rest time becomes more likely.
+                let totalDistance = numberOfRounds * distancePerRound;
+                for (let value in weights) {
+                    let weightOfValue = weights[value];
+                    weights[value] = 0.5 * weights[value] + 0.5 * weights[value] * value / totalDistance;
+                } 
+            }
+
+            return weightedRandom(weights);
+
+        }
+
+        function updateWorkoutView(rounds, distance, rest) {
+            document.getElementById("wod-rounds").innerHTML = rounds > 1 ? rounds + ' rounds of' : '&#8205;';
+            document.getElementById("wod-distance").innerText = distance + 'm';
+            document.getElementById("wod-rest").innerText = rounds > 1 ? rest + ' seconds rest between rounds' : 'for time'; // better time formatimng
+        }
+
+        function updateView() {
+            updateURL();
+            updateWorkout();
+        }
+
+        function loadValuesFromURL() {
+            var searchParams = new URLSearchParams(window.location.search);
+            inputIDs.forEach(function(inputID) {
+                if (searchParams.has(inputID)) {
+                    document.getElementById(inputID).value = searchParams.get(inputID);
+                    randomMode = true;
+                }
+            });
+        }
+
+        window.addEventListener('input', function (evt) {
+            updateView();
+        });
+
+        document.getElementById('wod-renew').addEventListener('click', () => {
+            randomMode = true;
+            updateWorkout();
+        });
+
+        loadValuesFromURL();
+        updateWorkout();
+    </script>
+</div>

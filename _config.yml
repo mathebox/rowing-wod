@@ -1,7 +1,4 @@
 title: "Rowing WOD" # the name of your site, e.g. ACME Corp.
 
-plugins:
-  - jekyll-postcss
-
 postcss:
   cache: false
